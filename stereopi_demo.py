@@ -273,8 +273,17 @@ def calc_z_by_disparity(l_crop, r_crop, left, right):
 # def calc_z_by_point_cloud (left, right):
 
 
-video_path = "/Users/elijah/Documents/stereopi/video.avi"
+#video_path = "/Users/elijah/Documents/stereopi/video.avi"
+#read_from_cameras(calc_z_by_disparity)
 
-#loop_video(video_path, calc_z_by_disparity)
+npzfile = np.load('/home/pi/stereopi-fisheye-robot/calibration_data/{}p/stereo_camera_calibration.npz'.format(480))
+Q = npzfile["dispartityToDepthMap"]
+print(Q)
 
-read_from_cameras(calc_z_by_disparity)
+fake_disparity = np.ones((480, 640), np.uint8) * 20
+
+#fake_disparity [300, 200] = 1
+
+distances = cv2.reprojectImageTo3D(fake_disparity, Q)
+
+print(distances[240, 320])
